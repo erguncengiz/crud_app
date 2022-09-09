@@ -1,18 +1,18 @@
 // To parse this JSON data, do
 //
-//     final accountsResponse = accountsResponseFromJson(jsonString);
+//     final accountsRequest = accountsRequestFromJson(jsonString);
 
 import 'dart:convert';
 
-List<AccountsResponse> accountsResponseFromJson(String str) =>
-    List<AccountsResponse>.from(
-        json.decode(str).map((x) => AccountsResponse.fromJson(x)));
+List<AccountRequest> accountsRequestFromJson(String str) =>
+    List<AccountRequest>.from(
+        json.decode(str).map((x) => AccountRequest.fromJson(x)));
 
-String accountsResponseToJson(List<AccountsResponse> data) =>
+String accountsRequestToJson(List<AccountRequest> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class AccountsResponse {
-  AccountsResponse({
+class AccountRequest {
+  AccountRequest({
     this.name,
     this.surname,
     this.birthdate,
@@ -30,8 +30,7 @@ class AccountsResponse {
   String? identity;
   String? id;
 
-  factory AccountsResponse.fromJson(Map<String, dynamic> json) =>
-      AccountsResponse(
+  factory AccountRequest.fromJson(Map<String, dynamic> json) => AccountRequest(
         name: json["name"],
         surname: json["surname"],
         birthdate: DateTime.parse(json["birthdate"]),

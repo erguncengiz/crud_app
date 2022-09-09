@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Global parameters
 String appBarTitle = "CRUD APP";
-String baseUrl = "https://6319ff806b4c78d91b49fca5.mockapi.io/api/v1";
+String baseUrl = "https://631b3c32fae3df4dcff8cbd2.mockapi.io/api";
 
 // Enums
 enum PageState { loading, error, done }

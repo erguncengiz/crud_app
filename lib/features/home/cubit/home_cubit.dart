@@ -1,24 +1,25 @@
-import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
 import '../../../core/network/accounts_request_client.dart';
-import '../models/account_response.dart';
 import '../models/accounts_response.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   late SharedPreferences sharedPreferences;
-  late List<AccountResponse> accounts = [];
+  late List<AccountsResponse> accounts = [];
+  int perPageCount = 10;
   AccountsRequestClient client = AccountsRequestClient(Dio(), baseUrl: baseUrl);
 
   HomeCubit() : super(HomeState());
 
-  void totalPageCount(List<Page> values) {
+  void totalPageCount(List<AccountsResponse> values) {
     if (values.isNotEmpty) {
-      emit(state.copyWith(totalPageCount: values.length));
+      emit(state.copyWith(
+          totalPageCount: (values.length ~/ perPageCount).ceil()));
     }
   }
 
@@ -28,9 +29,11 @@ class HomeCubit extends Cubit<HomeState> {
       var httpResponse = await client.getAccounts();
       var response = httpResponse?.data;
       accounts.clear();
-      accounts.addAll(response?.first.page[pageIndex].value ?? []);
+      int minRange = pageIndex * perPageCount;
+      int maxRange = maxRangeCalculator(pageIndex, response);
+      accounts.addAll(response?.getRange(minRange, maxRange) ?? []);
       if (state.totalPageCount == null) {
-        totalPageCount(response?.first.page ?? []);
+        totalPageCount(response ?? []);
       }
       if (accounts.isEmpty) {
         throw (Exception("Empty array!"));
@@ -55,5 +58,11 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(pageNumber: number));
     }
     getAccounts(number);
+  }
+
+  int maxRangeCalculator(int pageIndex, List<AccountsResponse>? response) {
+    return ((pageIndex + 1) * perPageCount) > (response?.length ?? 0)
+        ? (response?.length ?? 0)
+        : (pageIndex + 1) * perPageCount;
   }
 }

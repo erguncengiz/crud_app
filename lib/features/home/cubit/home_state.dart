@@ -2,7 +2,7 @@
 part of 'home_cubit.dart';
 
 class HomeState {
-  final List<AccountResponse>? accounts;
+  final List<AccountsResponse>? accounts;
   final int? pageNumber;
   final String? errorMessage;
   final PageState? pageState;
@@ -17,7 +17,7 @@ class HomeState {
   });
   //
   HomeState copyWith({
-    List<AccountResponse>? accounts,
+    List<AccountsResponse>? accounts,
     int? pageNumber,
     String? errorMessage,
     PageState? pageState,

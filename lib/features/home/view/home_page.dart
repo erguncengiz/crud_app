@@ -3,6 +3,8 @@ import 'package:crud_app/features/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/extensions/date_time_extension.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -47,19 +49,20 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: state.accounts?.length ?? 0,
+                itemCount: context.read<HomeCubit>().perPageCount,
                 itemBuilder: (context, index) {
                   return ListTile(
                     tileColor: Colors.grey.shade100,
                     title: Text(
-                      state.accounts?[index].name.toUpperCase() ?? "-",
+                      ("${state.accounts?[index].name ?? "-"} ${state.accounts?[index].surname ?? "-"}"),
                       style: Constants.textStyle.blackRegular,
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("${state.accounts?[index].phoneNumber}"),
                         Text(
-                            "${state.accounts?[index].phoneNumber}/${state.accounts?[index].birthdate}"),
+                            "${state.accounts?[index].birthdate?.yearMonthDayFormat()}"),
                         Text("${state.accounts?[index].identity}"),
                         const Center(
                           child: Divider(
@@ -68,7 +71,8 @@ class _HomePageState extends State<HomePage> {
                         )
                       ],
                     ),
-                    trailing: Text("${state.accounts![index].salary * 100} \$"),
+                    trailing:
+                        Text("${state.accounts![index].salary! * 100} \$"),
                   );
                 },
               ),
@@ -81,7 +85,6 @@ class _HomePageState extends State<HomePage> {
                       ? null
                       : () {
                           print("go for left!");
-
                           context
                               .read<HomeCubit>()
                               .changePageNumber(isForIncrement: false);
