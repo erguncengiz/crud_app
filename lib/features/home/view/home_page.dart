@@ -1,4 +1,5 @@
 import 'package:crud_app/constants.dart';
+import 'package:crud_app/features/create_account/view/create_account.dart';
 import 'package:crud_app/features/home/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,15 +17,60 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeCubit()..getAccounts(0),
+      create: (context) => HomeCubit()..fetchAndCheckSharedPrefs(),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.amber.shade700,
           centerTitle: true,
           title: Text(appBarTitle),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateAccountPage()),
+                  );
+                },
+                icon: const Icon(Icons.add))
+          ],
         ),
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) => SafeArea(
-            child: _buildBody(context, state),
+            child: Column(
+              children: [
+                _buildBody(context, state),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      onPressed: (state.pageNumber ?? 0) == 0
+                          ? null
+                          : () {
+                              print("go for left!");
+                              context
+                                  .read<HomeCubit>()
+                                  .changePageNumber(isForIncrement: false);
+                            },
+                      icon: const Icon(Icons.arrow_back_ios),
+                    ),
+                    Text("${state.pageNumber ?? 0}"),
+                    IconButton(
+                      onPressed: (state.pageNumber ?? 0) ==
+                              (state.totalPageCount ?? 1) - 1
+                          ? null
+                          : () {
+                              print("go for right!");
+                              context
+                                  .read<HomeCubit>()
+                                  .changePageNumber(isForIncrement: true);
+                            },
+                      icon: const Icon(Icons.arrow_forward_ios),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -38,21 +84,42 @@ class _HomePageState extends State<HomePage> {
           child: Text("Something went wrong!"),
         );
       case PageState.loading:
-        return const Center(
-          child: CircularProgressIndicator(
-            color: Colors.amber,
+        return const Expanded(
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Colors.amber,
+            ),
           ),
         );
       case PageState.done:
-        return Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                itemCount: context.read<HomeCubit>().perPageCount,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    tileColor: Colors.grey.shade100,
+        return Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 15),
+            itemCount: (state.maxRange ?? 0) - (state.minRange ?? 0),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  ListTile(
+                    leading: PopupMenuButton<ExecutionType>(
+                        // Callback that sets the selected popup menu item.
+                        icon: const Icon(Icons.more_vert),
+                        onSelected: (ExecutionType item) {
+                          context.read<HomeCubit>().editOrDelete(
+                              item, state.accounts![index], context);
+                        },
+                        itemBuilder: (BuildContext context) => [
+                              const PopupMenuItem<ExecutionType>(
+                                value: ExecutionType.update,
+                                child: Text('Update'),
+                              ),
+                              const PopupMenuItem<ExecutionType>(
+                                value: ExecutionType.delete,
+                                child: Text(
+                                  'Delete',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ]),
                     title: Text(
                       ("${state.accounts?[index].name ?? "-"} ${state.accounts?[index].surname ?? "-"}"),
                       style: Constants.textStyle.blackRegular,
@@ -64,48 +131,20 @@ class _HomePageState extends State<HomePage> {
                         Text(
                             "${state.accounts?[index].birthdate?.yearMonthDayFormat()}"),
                         Text("${state.accounts?[index].identity}"),
-                        const Center(
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        )
                       ],
                     ),
-                    trailing:
-                        Text("${state.accounts![index].salary! * 100} \$"),
-                  );
-                },
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  onPressed: (state.pageNumber ?? 0) == 0
-                      ? null
-                      : () {
-                          print("go for left!");
-                          context
-                              .read<HomeCubit>()
-                              .changePageNumber(isForIncrement: false);
-                        },
-                  icon: const Icon(Icons.arrow_back_ios),
-                ),
-                IconButton(
-                  onPressed:
-                      (state.pageNumber ?? 0) == (state.totalPageCount ?? 1) - 1
-                          ? null
-                          : () {
-                              print("go for right!");
-                              context
-                                  .read<HomeCubit>()
-                                  .changePageNumber(isForIncrement: true);
-                            },
-                  icon: const Icon(Icons.arrow_forward_ios),
-                )
-              ],
-            )
-          ],
+                    trailing: Text("${state.accounts![index].salary} \$"),
+                  ),
+                  const Center(
+                    child: Divider(
+                      thickness: 0,
+                      color: Colors.amber,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         );
       default:
         return const SizedBox();

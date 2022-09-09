@@ -1,4 +1,4 @@
-import 'package:crud_app/features/create_account/view/create_account.dart';
+import 'package:crud_app/features/home/view/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const CreateAccountPage(),
+      home: const HomePage(),
     );
   }
 }

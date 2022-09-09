@@ -7,6 +7,8 @@ class HomeState {
   final String? errorMessage;
   final PageState? pageState;
   final int? totalPageCount;
+  final int? minRange;
+  final int? maxRange;
   //
   HomeState({
     this.accounts,
@@ -14,6 +16,8 @@ class HomeState {
     this.errorMessage,
     this.pageState,
     this.totalPageCount,
+    this.minRange,
+    this.maxRange,
   });
   //
   HomeState copyWith({
@@ -22,6 +26,8 @@ class HomeState {
     String? errorMessage,
     PageState? pageState,
     int? totalPageCount,
+    int? minRange,
+    int? maxRange,
   }) {
     return HomeState(
       accounts: accounts ?? this.accounts,
@@ -29,6 +35,8 @@ class HomeState {
       errorMessage: errorMessage ?? this.errorMessage,
       pageState: pageState ?? this.pageState,
       totalPageCount: totalPageCount ?? this.totalPageCount,
+      minRange: minRange ?? this.minRange,
+      maxRange: maxRange ?? this.maxRange,
     );
   }
 }

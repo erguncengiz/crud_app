@@ -16,7 +16,19 @@ abstract class AccountsRequestClient {
   Future<HttpResponse<List<AccountsResponse>?>?> getAccounts();
 
   @POST("/account")
-  Future<HttpResponse<List<AccountsResponse>?>?> createAccount({
+  Future createAccount({
     @Body() AccountRequest? body,
+  });
+
+  @PUT("/account/{id}")
+  Future editAccount({
+    @Body() AccountRequest? body,
+    @Path("id") String? id,
+  });
+
+  @DELETE("/account/{id}")
+  Future deleteAccount({
+    @Body() AccountRequest? body,
+    @Path("id") String? id,
   });
 }
