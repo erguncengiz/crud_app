@@ -1,0 +1,15 @@
+{
+    "delete_title": "Delete",
+    "update_title": "Update",
+    "error_message": "Something went wrong!",
+    "name": "Name",
+    "surname": "Surname",
+    "phone_number": "Phone Number",
+    "salary": "Salary",
+    "identity": "Identity",
+    "user_update_message": "User update request sent!",
+    "user_create_message": "User creation request sent!",
+    "fields_error_message": "Please make sure all fields are valid!",
+    "update_button_title": "Update Account",
+    "create_button_title": "Create Account"
+}

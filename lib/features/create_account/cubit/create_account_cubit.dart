@@ -1,3 +1,4 @@
+import 'package:crud_app/core/environments/environments.dart';
 import 'package:crud_app/features/create_account/models/create_account_request_model/create_account_request_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,8 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
   TextEditingController identityController = TextEditingController();
 
   //Client
-  AccountsRequestClient client = AccountsRequestClient(Dio(), baseUrl: baseUrl);
+  AccountsRequestClient client =
+      AccountsRequestClient(Dio(), baseUrl: Environments.apiBaseUrl);
 
   Future<void> createOrUpdateAccount(
       BuildContext context, bool? isForUpdate, AccountRequest? model) async {

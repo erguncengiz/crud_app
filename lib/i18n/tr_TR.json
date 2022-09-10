@@ -1,0 +1,15 @@
+{
+    "delete_title": "Sil",
+    "update_title": "Güncelle",
+    "error_message": "Bir şeyler ters gitti!",
+    "name": "İsim",
+    "surname": "Soyisim",
+    "phone_number": "Telefon Numarası",
+    "salary": "Maaş",
+    "identity": "Kimlik",
+    "user_update_message": "Kullanıcı güncelleme isteği gönderildi!",
+    "user_create_message": "Kullanıcı oluşturma isteği gönderildi!",
+    "fields_error_message": "Lütfen bütün alanların geçerli olduğuna emin olun!",
+    "update_button_title": "Kullanıcıyı Güncelle",
+    "create_button_title": "Kullanıcı Oluştur"
+}

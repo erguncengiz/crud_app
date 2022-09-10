@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
+import '../../../core/environments/environments.dart';
 import '../../../core/network/accounts_request_client.dart';
 import '../../create_account/models/create_account_request_model/create_account_request_model.dart';
 import '../../create_account/view/create_account.dart';
@@ -15,7 +16,8 @@ class HomeCubit extends Cubit<HomeState> {
   late SharedPreferences? sharedPreferences;
   late List<AccountsResponse> accounts = [];
   int perPageCount = 10;
-  AccountsRequestClient client = AccountsRequestClient(Dio(), baseUrl: baseUrl);
+  AccountsRequestClient client =
+      AccountsRequestClient(Dio(), baseUrl: Environments.apiBaseUrl);
 
   HomeCubit() : super(HomeState());
 
@@ -91,19 +93,24 @@ class HomeCubit extends Cubit<HomeState> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => CreateAccountPage(
-                    isForUpdate: true,
-                    model: AccountRequest(
-                      birthdate: model.birthdate,
-                      id: model.id,
-                      identity: model.identity,
-                      name: model.name,
-                      phoneNumber: model.phoneNumber,
-                      salary: model.salary,
-                      surname: model.surname,
-                    ),
-                  )),
-        );
+            builder: (context) => CreateAccountPage(
+              isForUpdate: true,
+              model: AccountRequest(
+                birthdate: model.birthdate,
+                id: model.id,
+                identity: model.identity,
+                name: model.name,
+                phoneNumber: model.phoneNumber,
+                salary: model.salary,
+                surname: model.surname,
+              ),
+            ),
+          ),
+        ).then((value) {
+          emit(state.copyWith(pageState: PageState.loading));
+          Future.delayed(const Duration(milliseconds: 1300))
+              .then((value) => getAccounts(state.pageNumber ?? 0));
+        });
       } else {
         emit(state.copyWith(pageState: PageState.loading));
         await client.deleteAccount(

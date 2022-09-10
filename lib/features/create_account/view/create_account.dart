@@ -1,9 +1,11 @@
 import 'package:crud_app/constants.dart';
 import 'package:crud_app/features/create_account/models/create_account_request_model/create_account_request_model.dart';
+import 'package:crud_app/i18n/LocalizationKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:localization/localization.dart';
 
 import '../cubit/create_account_cubit.dart';
 
@@ -44,9 +46,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         controller:
                             context.read<CreateAccountCubit>().nameController,
                         keyboardType: TextInputType.name,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Name",
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: LocalizationKeys.name.i18n(),
                         ),
                       ),
                     ),
@@ -57,9 +59,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             .read<CreateAccountCubit>()
                             .surnameController,
                         keyboardType: TextInputType.name,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Surname",
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: LocalizationKeys.surname.i18n(),
                         ),
                       ),
                     ),
@@ -89,9 +91,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                         controller:
                             context.read<CreateAccountCubit>().salaryController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Salary",
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: LocalizationKeys.salary.i18n(),
                         ),
                       ),
                     ),
@@ -102,9 +104,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             .read<CreateAccountCubit>()
                             .phoneNumberController,
                         keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Phone Number",
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: LocalizationKeys.phone_number.i18n(),
                         ),
                       ),
                     ),
@@ -115,9 +117,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                             .read<CreateAccountCubit>()
                             .identityController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Identity",
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: LocalizationKeys.identity.i18n(),
                         ),
                       ),
                     ),
@@ -134,21 +136,22 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                                   context, widget.isForUpdate, widget.model);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: (widget.isForUpdate ?? false)
-                                ? const Text("User update request sent!")
-                                : const Text('User creation request sent!'),
+                                ? Text(
+                                    LocalizationKeys.user_update_message.i18n())
+                                : Text(LocalizationKeys.user_create_message
+                                    .i18n()),
                           ));
-                          Navigator.of(context).pop();
+                          Navigator.pop(context, true);
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content:
-                                Text('Please make sure all fields are valid!'),
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                LocalizationKeys.fields_error_message.i18n()),
                           ));
                         }
                       },
                       child: (widget.isForUpdate ?? false)
-                          ? const Text("Update Account")
-                          : const Text("Create Account"),
+                          ? Text(LocalizationKeys.update_button_title.i18n())
+                          : Text(LocalizationKeys.create_button_title.i18n()),
                     ),
                     const SizedBox(
                       height: 150,

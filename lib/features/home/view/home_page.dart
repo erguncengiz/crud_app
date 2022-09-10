@@ -1,8 +1,10 @@
 import 'package:crud_app/constants.dart';
 import 'package:crud_app/features/create_account/view/create_account.dart';
 import 'package:crud_app/features/home/cubit/home_cubit.dart';
+import 'package:crud_app/i18n/LocalizationKeys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localization/localization.dart';
 
 import '../../../core/extensions/date_time_extension.dart';
 
@@ -47,7 +49,6 @@ class _HomePageState extends State<HomePage> {
                       onPressed: (state.pageNumber ?? 0) == 0
                           ? null
                           : () {
-                              print("go for left!");
                               context
                                   .read<HomeCubit>()
                                   .changePageNumber(isForIncrement: false);
@@ -60,7 +61,6 @@ class _HomePageState extends State<HomePage> {
                               (state.totalPageCount ?? 1) - 1
                           ? null
                           : () {
-                              print("go for right!");
                               context
                                   .read<HomeCubit>()
                                   .changePageNumber(isForIncrement: true);
@@ -80,8 +80,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(BuildContext context, HomeState state) {
     switch (state.pageState) {
       case PageState.error:
-        return const Center(
-          child: Text("Something went wrong!"),
+        return Center(
+          child: Text(LocalizationKeys.error_message.i18n()),
         );
       case PageState.loading:
         return const Expanded(
@@ -108,15 +108,16 @@ class _HomePageState extends State<HomePage> {
                               item, state.accounts![index], context);
                         },
                         itemBuilder: (BuildContext context) => [
-                              const PopupMenuItem<ExecutionType>(
+                              PopupMenuItem<ExecutionType>(
                                 value: ExecutionType.update,
-                                child: Text('Update'),
+                                child:
+                                    Text(LocalizationKeys.update_title.i18n()),
                               ),
-                              const PopupMenuItem<ExecutionType>(
+                              PopupMenuItem<ExecutionType>(
                                 value: ExecutionType.delete,
                                 child: Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
+                                  LocalizationKeys.delete_title.i18n(),
+                                  style: const TextStyle(color: Colors.red),
                                 ),
                               ),
                             ]),
