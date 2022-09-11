@@ -13,7 +13,7 @@ import '../models/accounts_response.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  late SharedPreferences? sharedPreferences;
+  SharedPreferences? sharedPreferences;
   late List<AccountsResponse> accounts = [];
   int perPageCount = 10;
   AccountsRequestClient client =
@@ -21,7 +21,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit() : super(HomeState());
 
-  void fetchAndCheckSharedPrefs() async {
+  Future<void> fetchAndCheckSharedPrefs() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences?.containsKey(Constants.keys.savedPageIndex) ??
         false) {
@@ -31,6 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
     } else {
       getAccounts(0);
     }
+    return;
   }
 
   void totalPageCount(List<AccountsResponse> values) {
@@ -76,7 +77,9 @@ class HomeCubit extends Cubit<HomeState> {
       number = number - 1;
       emit(state.copyWith(pageNumber: number));
     }
-    sharedPreferences!.setInt(Constants.keys.savedPageIndex, number);
+    if (sharedPreferences != null) {
+      sharedPreferences!.setInt(Constants.keys.savedPageIndex, number);
+    }
     getAccounts(number);
   }
 
@@ -87,11 +90,11 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> editOrDelete(
-      ExecutionType type, AccountsResponse model, BuildContext context) async {
+      ExecutionType type, AccountsResponse model, BuildContext? context) async {
     try {
       if (type == ExecutionType.update) {
         Navigator.push(
-          context,
+          context!,
           MaterialPageRoute(
             builder: (context) => CreateAccountPage(
               isForUpdate: true,

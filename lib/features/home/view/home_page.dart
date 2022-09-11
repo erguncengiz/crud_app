@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 _buildBody(context, state),
                 Row(
+                  key: const Key("navigator"),
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
@@ -81,10 +82,12 @@ class _HomePageState extends State<HomePage> {
     switch (state.pageState) {
       case PageState.error:
         return Center(
+          key: const Key("errorBody"),
           child: Text(LocalizationKeys.error_message.i18n()),
         );
       case PageState.loading:
         return const Expanded(
+          key: Key("loadingBody"),
           child: Center(
             child: CircularProgressIndicator(
               color: Colors.amber,
@@ -93,7 +96,9 @@ class _HomePageState extends State<HomePage> {
         );
       case PageState.done:
         return Expanded(
+          key: const Key("successBody"),
           child: ListView.builder(
+            key: const Key("accountListView"),
             padding: const EdgeInsets.only(top: 15),
             itemCount: (state.maxRange ?? 0) - (state.minRange ?? 0),
             itemBuilder: (context, index) {
@@ -148,7 +153,9 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       default:
-        return const SizedBox();
+        return const SizedBox(
+          key: Key("defaultBody"),
+        );
     }
   }
 }

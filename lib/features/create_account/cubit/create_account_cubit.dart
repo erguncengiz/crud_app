@@ -27,7 +27,7 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
       AccountsRequestClient(Dio(), baseUrl: Environments.apiBaseUrl);
 
   Future<void> createOrUpdateAccount(
-      BuildContext context, bool? isForUpdate, AccountRequest? model) async {
+      BuildContext? context, bool? isForUpdate, AccountRequest? model) async {
     try {
       if (isForUpdate ?? false) {
         await client.editAccount(
@@ -52,26 +52,34 @@ class CreateAccountCubit extends Cubit<CreateAccountState> {
           ),
         );
       }
+      return;
     } catch (e) {
       print(e);
     }
   }
 
-  void fetchIsForUpdate(bool isForUpdate, AccountRequest? model) {
-    if (isForUpdate) {
-      nameController.text = model!.name!;
-      surnameController.text = model.surname!;
-      dateController.text = model.birthdate!.yearMonthDayFormat();
-      salaryController.text = model.salary.toString();
-      phoneNumberController.text = model.phoneNumber!;
-      identityController.text = model.identity!;
+  Future<bool> fetchIsForUpdate(bool isForUpdate, AccountRequest? model) async {
+    try {
+      if (isForUpdate) {
+        nameController.text = model!.name!;
+        surnameController.text = model.surname!;
+        dateController.text = model.birthdate!.yearMonthDayFormat();
+        salaryController.text = model.salary.toString();
+        phoneNumberController.text = model.phoneNumber!;
+        identityController.text = model.identity!;
+      }
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
-  bool get checkAllFieldsAreValid => (nameController.text.isNotEmpty &&
-      surnameController.text.isNotEmpty &&
-      dateController.text.isNotEmpty &&
-      salaryController.text.isNotEmpty &&
-      phoneNumberController.text.isNotEmpty &&
-      identityController.text.isNotEmpty);
+  Future<bool> checkAllFieldsAreValid() async {
+    return (nameController.text.isNotEmpty &&
+        surnameController.text.isNotEmpty &&
+        dateController.text.isNotEmpty &&
+        salaryController.text.isNotEmpty &&
+        phoneNumberController.text.isNotEmpty &&
+        identityController.text.isNotEmpty);
+  }
 }
